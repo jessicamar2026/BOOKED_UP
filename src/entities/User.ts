@@ -11,6 +11,12 @@ export class User {
     this.userId = uuidv7();
   }
 
+  @Column()
+  firstName: string;
+
+  @Column()
+  lastName: string;
+
   @Column({ unique: true })
   email: string;
 
