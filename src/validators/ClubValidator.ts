@@ -9,3 +9,19 @@ export const CreateClubSchema = z.object({
   maxMembers: z.number(),
   createdAt: z.date(),
 });
+
+export const UpdateClubNameSchema = z.object({
+  clubName: z.string(),
+});
+
+export const UpdateJoinCodeSchema = z.object({
+  joinCode: z.string(),
+});
+
+export const UpdateClubVisibilitySchema = z.object({
+  visibility: z.enum(['private', 'public', 'invite only']),
+});
+
+export const UpdateMaxMembersSchema = z.object({
+  maxMembers: z.number().min(2),
+});

@@ -50,6 +50,53 @@ async function addClub(
   return clubRepository.save(newClub);
 }
 
+async function updateClubName(clubId: string, newName: string): Promise<Club | null> {
+  const club = await clubRepository.findOne({ where: { clubId } });
+
+  if (!club) {
+    return null;
+  }
+
+  club.clubName = newName;
+  return clubRepository.save(club);
+}
+
+async function updateJoinCode(clubId: string, newJoinCode: string): Promise<Club | null> {
+  const club = await clubRepository.findOne({ where: { clubId } });
+
+  if (!club) {
+    return null;
+  }
+
+  club.joinCode = newJoinCode;
+  return clubRepository.save(club);
+}
+
+async function updateVisibility(
+  clubId: string,
+  newVisibility: ClubVisibility,
+): Promise<Club | null> {
+  const club = await clubRepository.findOne({ where: { clubId } });
+
+  if (!club) {
+    return null;
+  }
+
+  club.visibility = newVisibility;
+  return clubRepository.save(club);
+}
+
+async function updateMaxMembers(clubId: string, newMax: number): Promise<Club | null> {
+  const club = await clubRepository.findOne({ where: { clubId } });
+
+  if (!club) {
+    return null;
+  }
+
+  club.maxMembers = newMax;
+  return clubRepository.save(club);
+}
+
 export {
   getAllClubs,
   getClubById,
@@ -59,4 +106,8 @@ export {
   getClubByMaxMembers,
   getClubByCreatedDate,
   addClub,
+  updateClubName,
+  updateJoinCode,
+  updateVisibility,
+  updateMaxMembers,
 };

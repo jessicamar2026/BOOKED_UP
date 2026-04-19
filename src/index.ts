@@ -1,28 +1,42 @@
+import connectPgSimple from 'connect-pg-simple';
 import express, { Express } from 'express';
+import session from 'express-session';
 import './config.js'; // do not remove this line
-import { sessionMiddleware } from './sessionConfig.js';
 import {
-  getUsers,
-  getUserByTheId,
-  getUserByTheEmail,
-  registerUser,
-  logIn,
-  createUser,
-  updatedUserEmail,
-  logOut,
-  updatedUserPassword,
-  updatedUserFirstName,
-  updatedUserLastName,
-} from './controllers/UserController.js';
-import {
-  updatedClubMemberRole,
-  getClubMembers,
+  createClubMember,
   getClubMemberByTheId,
   getClubMemberByTheRole,
-  createClubMember,
+  getClubMembers,
+  updatedClubMemberRole,
 } from './controllers/ClubMemberController.js';
-import session from 'express-session';
-import connectPgSimple from 'connect-pg-simple';
+import {
+  createUser,
+  getUserByTheEmail,
+  getUserByTheId,
+  getUsers,
+  logIn,
+  logOut,
+  registerUser,
+  updatedUserEmail,
+  updatedUserFirstName,
+  updatedUserLastName,
+  updatedUserPassword,
+} from './controllers/UserController.js';
+import {
+  getClubs,
+  getClubByTheId,
+  getClubByTheName,
+  getClubByCreator,
+  getClubByTheVisibility,
+  getClubByTheMaxMembers,
+  getClubByTheCreatedDate,
+  createClub,
+  updatedClubName,
+  updatedClubJoinCode,
+  updatedClubVisibility,
+  updatedClubMaxMembers,
+} from './controllers/ClubController.js';
+import { sessionMiddleware } from './sessionConfig.js';
 
 const app: Express = express();
 const { PORT, COOKIE_SECRET } = process.env;
@@ -68,5 +82,18 @@ app.get('/club-member:clubMemberId', getClubMemberByTheId);
 app.get('/club-member/:ClubRole', getClubMemberByTheRole);
 app.post('/club-members', createClubMember);
 app.patch('/club-members/:clubMemberId/role', updatedClubMemberRole);
+// club
+app.get('/clubs', getClubs);
+app.get('/clubs/:clubId', getClubByTheId);
+app.get('/club/:clubName', getClubByTheName);
+app.get('/club/:createdByUser', getClubByCreator);
+app.get('/club/:visbility', getClubByTheVisibility);
+app.get('/club/:maxMembers', getClubByTheMaxMembers);
+app.get('/club/:createdAt', getClubByTheCreatedDate);
+app.post('/clubs', createClub);
+app.patch('/clubs/:clubId/club-name', updatedClubName);
+app.patch('/clubs/:clubId/join-code', updatedClubJoinCode);
+app.patch('/clubs/:clubId/visbility', updatedClubVisibility);
+app.patch('/clubs/:clubId/max-members', updatedClubMaxMembers);
 
 app.listen(PORT, () => console.log(`Listening at http://localhost:${PORT}`));
