@@ -1,6 +1,8 @@
 import { BeforeInsert, Column, CreateDateColumn, Entity, PrimaryColumn } from 'typeorm';
 import { v7 as uuidv7 } from 'uuid';
 
+export type ClubVisibility = 'private' | 'public' | 'invite only';
+
 @Entity()
 export class Club {
   @PrimaryColumn()
@@ -21,10 +23,7 @@ export class Club {
   createdByUser: string;
 
   @Column()
-  currentBook: string;
-
-  @Column()
-  visibility: 'private' | 'public' | 'invites only';
+  visibility: ClubVisibility;
 
   @Column()
   maxMembers: number;

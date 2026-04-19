@@ -10,7 +10,7 @@ export const CreateUserSchema = z.object({
 });
 
 export const UpdateUserEmailSchema = z.object({
-  email: z.email(),
+  email: z.string().email(),
 });
 
 export const UpdateUserPasswordSchema = z.object({

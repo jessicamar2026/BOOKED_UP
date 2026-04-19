@@ -129,35 +129,25 @@ async function logOut(req: Request, res: Response): Promise<void> {
 }
 
 async function updatedUserEmail(req: Request<{ userId: string }>, res: Response): Promise<void> {
-  try {
-    const userId = req.params.userId;
+  const { userId } = req.params;
 
-    const parsed = UpdateUserEmailSchema.safeParse(req.body);
-    if (!parsed.success) {
-      res.status(400).json(parsed.error.flatten());
-      return;
-    }
-
-    const { email } = parsed.data;
-
-    const existingUser = await getUserByEmail(email);
-    if (existingUser) {
-      res.status(409).json({ message: 'Email in use' });
-      return;
-    }
-
-    const updatedUserEmail = await updateUserEmail(userId, email);
-
-    if (!updatedUserEmail) {
-      res.status(404).json({ message: 'User not found' });
-      return;
-    }
-
-    res.json(updatedUserEmail);
+  const result = UpdateUserEmailSchema.safeParse(req.body);
+  if (!result.success) {
+    res.status(400).json({ errors: result.error });
     return;
+  }
+
+  try {
+    const updatedUser = await updateUserEmail(userId, result.data.email);
+    if (!updatedUser) {
+      res.status(404).json({ error: 'User not found' });
+      return;
+    }
+    res.json({ user: updatedUser });
   } catch (err) {
     console.error(err);
-    res.sendStatus(500);
+    const databaseErrorMessage = parseDatabaseError(err);
+    res.status(500).json(databaseErrorMessage);
   }
 }
 
@@ -165,13 +155,13 @@ async function updatedUserPassword(req: Request<{ userId: string }>, res: Respon
   try {
     const userId = req.params.userId;
 
-    const parsed = UpdateUserPasswordSchema.safeParse(req.body);
-    if (!parsed.success) {
-      res.status(400).json(parsed.error.flatten());
+    const result = UpdateUserPasswordSchema.safeParse(req.body);
+    if (!result.success) {
+      res.status(400).json(result.error.flatten());
       return;
     }
 
-    const { password } = parsed.data;
+    const { password } = result.data;
 
     const passwordHash = await argon2.hash(password);
 
@@ -197,13 +187,13 @@ async function updatedUserFirstName(
   try {
     const userId = req.params.userId;
 
-    const parsed = UpdateUserFirstNameSchema.safeParse(req.body);
-    if (!parsed.success) {
-      res.status(400).json(parsed.error.flatten());
+    const result = UpdateUserFirstNameSchema.safeParse(req.body);
+    if (!result.success) {
+      res.status(400).json(result.error.flatten());
       return;
     }
 
-    const { firstName } = parsed.data;
+    const { firstName } = result.data;
 
     const updatedUserFirstName = await updateUserFirstName(userId, firstName);
 
@@ -224,13 +214,13 @@ async function updatedUserLastName(req: Request<{ userId: string }>, res: Respon
   try {
     const userId = req.params.userId;
 
-    const parsed = UpdateUserLastNameSchema.safeParse(req.body);
-    if (!parsed.success) {
-      res.status(400).json(parsed.error.flatten());
+    const result = UpdateUserLastNameSchema.safeParse(req.body);
+    if (!result.success) {
+      res.status(400).json(result.error.flatten());
       return;
     }
 
-    const { lastName } = parsed.data;
+    const { lastName } = result.data;
 
     const updatedUserLastName = await updateUserFirstName(userId, lastName);
 

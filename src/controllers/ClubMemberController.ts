@@ -10,8 +10,8 @@ import {
 } from '../models/ClubMemberModel.js';
 
 async function getClubMembers(req: Request, res: Response): Promise<void> {
-  const users = await getAllClubMembers();
-  res.json({ users });
+  const clubMembers = await getAllClubMembers();
+  res.json({ clubMembers });
 }
 
 async function getClubMemberByTheId(
@@ -22,7 +22,7 @@ async function getClubMemberByTheId(
   const clubMember = await getClubMemberById(clubMemberId);
 
   if (!clubMember) {
-    res.status(404).json({ error: 'User not found' });
+    res.status(404).json({ error: 'Club member not found' });
     return;
   }
 
@@ -37,7 +37,7 @@ async function getClubMemberByTheRole(
   const clubMember = await getClubMemberByRole(role);
 
   if (!clubMember) {
-    res.status(404).json({ error: 'Club Member not found' });
+    res.status(404).json({ error: 'Club member not found' });
     return;
   }
 
@@ -53,9 +53,9 @@ async function createClubMember(req: Request, res: Response): Promise<void> {
   }
 
   const { clubMemberId, role } = result.data;
-  const newUser = await addClubMember(clubMemberId, role);
-  console.log(newUser);
-  res.status(201).json({ todo: newUser });
+  const newClubMember = await addClubMember(clubMemberId, role);
+  console.log(newClubMember);
+  res.status(201).json({ todo: newClubMember });
 }
 
 async function updatedClubMemberRole(
@@ -65,13 +65,13 @@ async function updatedClubMemberRole(
   try {
     const { clubMemberId } = req.params;
 
-    const parsed = ClubMemberSchema.safeParse(req.body);
-    if (!parsed.success) {
-      res.status(400).json(parsed.error.flatten());
+    const result = ClubMemberSchema.safeParse(req.body);
+    if (!result.success) {
+      res.status(400).json(result.error.flatten());
       return;
     }
 
-    const { role } = parsed.data;
+    const { role } = result.data;
 
     const updatedClubMemberRole = await updateClubMemberRole(clubMemberId, role);
 
