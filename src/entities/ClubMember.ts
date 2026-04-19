@@ -1,6 +1,8 @@
 import { BeforeInsert, Column, CreateDateColumn, Entity, PrimaryColumn } from 'typeorm';
 import { v7 as uuidv7 } from 'uuid';
 
+export type ClubRole = 'admin' | 'non-admin';
+
 @Entity()
 export class ClubMember {
   @PrimaryColumn()
@@ -12,10 +14,7 @@ export class ClubMember {
   }
 
   @Column()
-  userId: string;
-
-  @Column()
-  role: 'admin' | 'non-admin';
+  role: ClubRole;
 
   @CreateDateColumn()
   joinedAt: Date;

@@ -43,7 +43,7 @@ async function updateUserEmail(userId: string, newEmail: string): Promise<User |
   return userRepository.save(user);
 }
 
-async function updateUserPassWord(userId: string, newPassword: string): Promise<User | null> {
+async function updateUserPassword(userId: string, newPassword: string): Promise<User | null> {
   const user = await userRepository.findOne({ where: { userId } });
 
   if (!user) {
@@ -82,7 +82,7 @@ export {
   getUserById,
   getUserByEmail,
   updateUserEmail,
-  updateUserPassWord,
+  updateUserPassword,
   updateUserFirstName,
   updateUserLastName,
 };

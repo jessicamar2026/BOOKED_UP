@@ -4,6 +4,9 @@ import { RegistrationSchema } from '../validators/authValidator.js';
 import {
   CreateUserSchema,
   UpdateUserEmailSchema,
+  UpdateUserPasswordSchema,
+  UpdateUserFirstNameSchema,
+  UpdateUserLastNameSchema,
   LogInSchema,
 } from '../validators/UserValidator.js';
 import {
@@ -12,6 +15,8 @@ import {
   getUserByEmail,
   getAllUsers,
   updateUserEmail,
+  updateUserPassword,
+  updateUserFirstName,
 } from '../models/UserModel.js';
 import { parseDatabaseError } from '../utils/db-utils.js';
 import 'express-session';
@@ -156,6 +161,92 @@ async function updatedUserEmail(req: Request<{ userId: string }>, res: Response)
   }
 }
 
+async function updatedUserPassword(req: Request<{ userId: string }>, res: Response): Promise<void> {
+  try {
+    const userId = req.params.userId;
+
+    const parsed = UpdateUserPasswordSchema.safeParse(req.body);
+    if (!parsed.success) {
+      res.status(400).json(parsed.error.flatten());
+      return;
+    }
+
+    const { password } = parsed.data;
+
+    const passwordHash = await argon2.hash(password);
+
+    const updatedUserPassword = await updateUserPassword(userId, passwordHash);
+
+    if (!updatedUserPassword) {
+      res.status(404).json({ message: 'User not found' });
+      return;
+    }
+
+    res.json(updatedUserPassword);
+    return;
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
+}
+
+async function updatedUserFirstName(
+  req: Request<{ userId: string }>,
+  res: Response,
+): Promise<void> {
+  try {
+    const userId = req.params.userId;
+
+    const parsed = UpdateUserFirstNameSchema.safeParse(req.body);
+    if (!parsed.success) {
+      res.status(400).json(parsed.error.flatten());
+      return;
+    }
+
+    const { firstName } = parsed.data;
+
+    const updatedUserFirstName = await updateUserFirstName(userId, firstName);
+
+    if (!updatedUserFirstName) {
+      res.status(404).json({ message: 'User not found' });
+      return;
+    }
+
+    res.json(updatedUserFirstName);
+    return;
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
+}
+
+async function updatedUserLastName(req: Request<{ userId: string }>, res: Response): Promise<void> {
+  try {
+    const userId = req.params.userId;
+
+    const parsed = UpdateUserLastNameSchema.safeParse(req.body);
+    if (!parsed.success) {
+      res.status(400).json(parsed.error.flatten());
+      return;
+    }
+
+    const { lastName } = parsed.data;
+
+    const updatedUserLastName = await updateUserFirstName(userId, lastName);
+
+    if (!updatedUserLastName) {
+      res.status(404).json({ message: 'User not found' });
+      return;
+    }
+
+    res.json(updatedUserLastName);
+    return;
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
+}
+
 export {
   getUsers,
   getUserByTheId,
@@ -165,4 +256,7 @@ export {
   logIn,
   logOut,
   updatedUserEmail,
+  updatedUserPassword,
+  updatedUserFirstName,
+  updatedUserLastName,
 };

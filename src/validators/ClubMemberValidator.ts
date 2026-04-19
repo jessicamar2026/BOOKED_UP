@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const GetClubMemberSchema = z.object({
-  userId: z.string(),
+export const ClubMemberSchema = z.object({
+  clubMemberId: z.string(),
   role: z.enum(['admin', 'non-admin']),
 });

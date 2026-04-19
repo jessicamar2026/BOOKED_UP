@@ -3,13 +3,24 @@ import './config.js'; // do not remove this line
 import { sessionMiddleware } from './sessionConfig.js';
 import {
   getUsers,
+  getUserByTheId,
   getUserByTheEmail,
   registerUser,
   logIn,
   createUser,
   updatedUserEmail,
   logOut,
+  updatedUserPassword,
+  updatedUserFirstName,
+  updatedUserLastName,
 } from './controllers/UserController.js';
+import {
+  updatedClubMemberRole,
+  getClubMembers,
+  getClubMemberByTheId,
+  getClubMemberByTheRole,
+  createClubMember,
+} from './controllers/ClubMemberController.js';
 import session from 'express-session';
 import connectPgSimple from 'connect-pg-simple';
 
@@ -39,12 +50,23 @@ app.use(express.json());
 app.use(express.static('public', { extensions: ['html'] }));
 
 // -- Routes --------------------------------------------------
+// users
 app.post('/users', registerUser);
 app.post('users/login', logIn);
 app.delete('/sessions', logOut);
 app.post('/users', createUser);
-app.patch('/users/:id/email', updatedUserEmail);
+app.patch('/users/:userId/email', updatedUserEmail);
 app.get('/users', getUsers);
-app.get('/user/:id', getUserByTheEmail);
+app.get('/user/:id', getUserByTheId);
+app.get('/user/:email', getUserByTheEmail);
+app.patch('/user/:userId/password', updatedUserPassword);
+app.patch('/user/:userId/first-name', updatedUserFirstName);
+app.patch('/user/:userId/last-name', updatedUserLastName);
+// club members
+app.get('/club-members', getClubMembers);
+app.get('/club-member:clubMemberId', getClubMemberByTheId);
+app.get('/club-member/:ClubRole', getClubMemberByTheRole);
+app.post('/club-members', createClubMember);
+app.patch('/club-members/:clubMemberId/role', updatedClubMemberRole);
 
 app.listen(PORT, () => console.log(`Listening at http://localhost:${PORT}`));
