@@ -56,8 +56,6 @@ app.use(
   }),
 );
 
-app.use(express.json());
-
 // Setup static resource file middleware
 // This allows the client to access any file inside the `public` directory
 // Only put file that you actually want to be publicly accessibly in the `public` folder

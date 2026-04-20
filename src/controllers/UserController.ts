@@ -1,25 +1,25 @@
-import { Request, Response } from 'express';
 import argon2 from 'argon2';
-import { RegistrationSchema } from '../validators/authValidator.js';
+import { Request, Response } from 'express';
+import 'express-session';
 import {
-  CreateUserSchema,
-  UpdateUserEmailSchema,
-  UpdateUserPasswordSchema,
-  UpdateUserFirstNameSchema,
-  UpdateUserLastNameSchema,
-  LogInSchema,
-} from '../validators/UserValidator.js';
-import {
-  getUserById,
   addUser,
-  getUserByEmail,
   getAllUsers,
+  getUserByEmail,
+  getUserById,
   updateUserEmail,
-  updateUserPassword,
   updateUserFirstName,
+  updateUserPassword,
 } from '../models/UserModel.js';
 import { parseDatabaseError } from '../utils/db-utils.js';
-import 'express-session';
+// import { RegistrationSchema } from '../validators/authValidator.js';
+import {
+  CreateUserSchema,
+  LogInSchema,
+  UpdateUserEmailSchema,
+  UpdateUserFirstNameSchema,
+  UpdateUserLastNameSchema,
+  UpdateUserPasswordSchema,
+} from '../validators/UserValidator.js';
 
 async function getUsers(req: Request, res: Response): Promise<void> {
   const users = await getAllUsers();
@@ -50,25 +50,32 @@ async function getUserByTheEmail(req: Request<{ email: string }>, res: Response)
   res.json({ user });
 }
 
+// async function registerUser(req: Request, res: Response): Promise<void> {
+//   const result = RegistrationSchema.safeParse(req.body);
+//   if (!result.success) {
+//     res.status(400).json(result.error.flatten());
+//     return;
+//   }
+
+//   const { firstName, lastName, email, password, displayName } = result.data;
+
+//   try {
+//     const passwordHash = await argon2.hash(password);
+//     const newUser = await addUser(firstName, lastName, email, passwordHash, displayName);
+//     console.log(newUser);
+//     res.sendStatus(201);
+//   } catch (err) {
+//     console.error(err);
+//     const databaseErrorMessage = parseDatabaseError(err);
+//     res.status(500).json(databaseErrorMessage);
+//   }
+// }
+
 async function registerUser(req: Request, res: Response): Promise<void> {
-  const result = RegistrationSchema.safeParse(req.body);
-  if (!result.success) {
-    res.status(400).json(result.error.flatten());
-    return;
-  }
+  console.log('route hit');
+  console.log('body:', req.body);
 
-  const { firstName, lastName, email, password, displayName } = result.data;
-
-  try {
-    const passwordHash = await argon2.hash(password);
-    const newUser = await addUser(firstName, lastName, email, passwordHash, displayName);
-    console.log(newUser);
-    res.sendStatus(201);
-  } catch (err) {
-    console.error(err);
-    const databaseErrorMessage = parseDatabaseError(err);
-    res.status(500).json(databaseErrorMessage);
-  }
+  res.status(201).json({ ok: true });
 }
 
 async function createUser(req: Request, res: Response): Promise<void> {
@@ -238,15 +245,15 @@ async function updatedUserLastName(req: Request<{ userId: string }>, res: Respon
 }
 
 export {
-  getUsers,
-  getUserByTheId,
-  getUserByTheEmail,
-  registerUser,
   createUser,
+  getUserByTheEmail,
+  getUserByTheId,
+  getUsers,
   logIn,
   logOut,
+  registerUser,
   updatedUserEmail,
-  updatedUserPassword,
   updatedUserFirstName,
   updatedUserLastName,
+  updatedUserPassword,
 };

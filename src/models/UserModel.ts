@@ -77,12 +77,12 @@ async function updateUserLastName(userId: string, newLastName: string): Promise<
 }
 
 export {
-  getAllUsers,
   addUser,
-  getUserById,
+  getAllUsers,
   getUserByEmail,
+  getUserById,
   updateUserEmail,
-  updateUserPassword,
   updateUserFirstName,
   updateUserLastName,
+  updateUserPassword,
 };

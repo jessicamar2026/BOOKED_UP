@@ -1,4 +1,4 @@
-import { Entity, PrimaryColumn, Column, BeforeInsert, CreateDateColumn } from 'typeorm';
+import { BeforeInsert, Column, CreateDateColumn, Entity, PrimaryColumn } from 'typeorm';
 import { v7 as uuidv7 } from 'uuid';
 
 @Entity()
@@ -26,7 +26,7 @@ export class User {
   @Column()
   displayName: string;
 
-  @Column()
+  @Column({ default: 'user' })
   role: 'admin' | 'user';
 
   @CreateDateColumn()
