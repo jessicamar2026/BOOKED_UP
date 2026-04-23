@@ -9,13 +9,13 @@ export interface ApiResponse<T = void> {
 async function request<T = void>(
   method: string,
   path: string,
-  body?: JsonBody,
+  body?: JsonBody
 ): Promise<ApiResponse<T>> {
   const res = await fetch(`/api${path}`, {
     method,
     credentials: 'same-origin',
     headers: body ? { 'Content-Type': 'application/json' } : undefined,
-    body: body ? JSON.stringify(body) : undefined,
+    body: body ? JSON.stringify(body) : undefined
   });
 
   const contentType = res.headers.get('content-type') ?? '';
@@ -31,5 +31,5 @@ export const api = {
   post: <T = void>(path: string, body?: JsonBody) => request<T>('POST', path, body),
   put: <T = void>(path: string, body?: JsonBody) => request<T>('PUT', path, body),
   patch: <T = void>(path: string, body?: JsonBody) => request<T>('PATCH', path, body),
-  del: <T = void>(path: string) => request<T>('DELETE', path),
+  del: <T = void>(path: string) => request<T>('DELETE', path)
 };
