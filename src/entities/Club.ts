@@ -1,5 +1,14 @@
-import { BeforeInsert, Column, CreateDateColumn, Entity, PrimaryColumn } from 'typeorm';
+import {
+  BeforeInsert,
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryColumn,
+  ManyToMany,
+  Relation,
+} from 'typeorm';
 import { v7 as uuidv7 } from 'uuid';
+import { ClubMember } from './ClubMember.js';
 
 export type ClubVisibility = 'private' | 'public' | 'invite only';
 
@@ -30,4 +39,7 @@ export class Club {
 
   @CreateDateColumn()
   createdAt: Date;
+
+  @ManyToMany(() => ClubMember, (clubMember) => clubMember.clubs)
+  clubMembers: Relation<ClubMember>[];
 }

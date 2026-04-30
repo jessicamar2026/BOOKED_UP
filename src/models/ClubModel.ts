@@ -1,5 +1,6 @@
 import { AppDataSource } from '../dataSource.js';
 import { Club, ClubVisibility } from '../entities/Club.js';
+import { ClubMember } from '../entities/ClubMember.js';
 
 const clubRepository = AppDataSource.getRepository(Club);
 
@@ -97,6 +98,34 @@ async function updateMaxMembers(clubId: string, newMax: number): Promise<Club | 
   return clubRepository.save(club);
 }
 
+async function addClubWithMembers(
+  clubName: string,
+  joinCode: string,
+  createdByUser: string,
+  visibility: ClubVisibility,
+  maxMembers: number,
+  createdAt: Date,
+  clubMembers: ClubMember[],
+): Promise<Club> {
+  const newClub = new Club();
+  newClub.clubName = clubName;
+  newClub.joinCode = joinCode;
+  newClub.createdByUser = createdByUser;
+  newClub.visibility = visibility;
+  newClub.maxMembers = maxMembers;
+  newClub.createdAt = createdAt;
+  newClub.clubMembers = clubMembers;
+
+  return clubRepository.save(newClub);
+}
+
+async function getClubWithMembers(clubId: string): Promise<Club | null> {
+  return clubRepository.findOne({
+    where: { clubId },
+    relations: { clubMembers: true },
+  });
+}
+
 export {
   getAllClubs,
   getClubById,
@@ -110,4 +139,6 @@ export {
   updateJoinCode,
   updateVisibility,
   updateMaxMembers,
+  addClubWithMembers,
+  getClubWithMembers,
 };

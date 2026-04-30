@@ -20,6 +20,7 @@ import {
   updateJoinCode,
   updateVisibility,
   updateMaxMembers,
+  getClubWithMembers,
 } from '../models/ClubModel.js';
 
 async function getClubs(req: Request, res: Response): Promise<void> {
@@ -239,6 +240,21 @@ async function updatedClubMaxMembers(
   }
 }
 
+async function getClubWithClubMembers(
+  req: Request<{ clubId: string }>,
+  res: Response,
+): Promise<void> {
+  const { clubId } = req.params;
+  const club = await getClubWithMembers(clubId);
+
+  if (!club) {
+    res.status(404).json({ error: 'Club not found' });
+    return;
+  }
+
+  res.json({ club });
+}
+
 export {
   getClubs,
   getClubByTheId,
@@ -252,4 +268,5 @@ export {
   updatedClubJoinCode,
   updatedClubVisibility,
   updatedClubMaxMembers,
+  getClubWithClubMembers,
 };
