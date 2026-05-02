@@ -8,6 +8,7 @@ import {
   getUserById,
   updateUserEmail,
   updateUserFirstName,
+  updateUserLastName,
   updateUserPassword,
 } from '../models/UserModel.js';
 import { parseDatabaseError } from '../utils/db-utils.js';
@@ -222,7 +223,7 @@ async function updatedUserLastName(req: Request<{ userId: string }>, res: Respon
 
     const { lastName } = result.data;
 
-    const updatedUserLastName = await updateUserFirstName(userId, lastName);
+    const updatedUserLastName = await updateUserLastName(userId, lastName);
 
     if (!updatedUserLastName) {
       res.status(404).json({ message: 'User not found' });

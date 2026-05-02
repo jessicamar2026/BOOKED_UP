@@ -1,6 +1,7 @@
 import { AppDataSource } from '../dataSource.js';
 import { Club, ClubVisibility } from '../entities/Club.js';
 import { ClubMember } from '../entities/ClubMember.js';
+import { clubMemberRepository } from '../models/ClubMemberModel.js';
 
 const clubRepository = AppDataSource.getRepository(Club);
 
@@ -16,35 +17,33 @@ async function getClubByClubName(clubName: string): Promise<Club | null> {
   return clubRepository.findOne({ where: { clubName } });
 }
 
-async function getClubByCreatedUser(createdByUser: string): Promise<Club | null> {
-  return clubRepository.findOne({ where: { createdByUser } });
+async function getClubByCreatedUser(createdByUserId: string): Promise<Club[]> {
+  return clubRepository.find({ where: { createdByUserId } });
 }
 
-async function getClubByVisibility(visibility: ClubVisibility): Promise<Club | null> {
-  return clubRepository.findOne({ where: { visibility } });
+async function getClubByVisibility(visibility: ClubVisibility): Promise<Club[]> {
+  return clubRepository.find({ where: { visibility } });
 }
 
-async function getClubByMaxMembers(maxMembers: number): Promise<Club | null> {
-  return clubRepository.findOne({ where: { maxMembers } });
+async function getClubByMaxMembers(maxMembers: number): Promise<Club[]> {
+  return clubRepository.find({ where: { maxMembers } });
 }
 
-async function getClubByCreatedDate(createdAt: Date): Promise<Club | null> {
-  return clubRepository.findOne({ where: { createdAt } });
+async function getClubByCreatedDate(createdAt: Date): Promise<Club[]> {
+  return clubRepository.find({ where: { createdAt } });
 }
 
 async function addClub(
-  clubId: string,
   clubName: string,
   joinCode: string,
-  createdByUser: string,
+  createdByUserId: string,
   visibility: ClubVisibility,
   maxMembers: number,
 ): Promise<Club> {
   const newClub = new Club();
-  newClub.clubId = clubId;
   newClub.clubName = clubName;
   newClub.joinCode = joinCode;
-  newClub.createdByUser = createdByUser;
+  newClub.createdByUserId = createdByUserId;
   newClub.visibility = visibility;
   newClub.maxMembers = maxMembers;
 
@@ -104,16 +103,14 @@ async function addClubWithMembers(
   createdByUser: string,
   visibility: ClubVisibility,
   maxMembers: number,
-  createdAt: Date,
   clubMembers: ClubMember[],
 ): Promise<Club> {
   const newClub = new Club();
   newClub.clubName = clubName;
   newClub.joinCode = joinCode;
-  newClub.createdByUser = createdByUser;
+  newClub.createdByUserId = createdByUser;
   newClub.visibility = visibility;
   newClub.maxMembers = maxMembers;
-  newClub.createdAt = createdAt;
   newClub.clubMembers = clubMembers;
 
   return clubRepository.save(newClub);
@@ -126,19 +123,51 @@ async function getClubWithMembers(clubId: string): Promise<Club | null> {
   });
 }
 
+async function joinClubByCode(userId: string, joinCode: string): Promise<ClubMember> {
+  const club = await clubRepository.findOne({
+    where: { joinCode },
+    relations: ['clubMembers', 'clubMembers.user'],
+  });
+
+  if (!club) {
+    throw new Error('Invalid join code');
+  }
+
+  const existingMember = await clubMemberRepository.findOne({
+    where: {
+      user: { userId },
+      club: { clubId: club.clubId },
+    },
+  });
+
+  if (existingMember) {
+    return null;
+  }
+
+  if (club.clubMembers.length >= club.maxMembers) {
+    return null;
+  }
+
+  const membership = new ClubMember();
+
+  return await clubMemberRepository.save(membership);
+}
+
 export {
-  getAllClubs,
-  getClubById,
-  getClubByClubName,
-  getClubByCreatedUser,
-  getClubByVisibility,
-  getClubByMaxMembers,
-  getClubByCreatedDate,
   addClub,
+  addClubWithMembers,
+  getAllClubs,
+  getClubByClubName,
+  getClubByCreatedDate,
+  getClubByCreatedUser,
+  getClubById,
+  getClubByMaxMembers,
+  getClubByVisibility,
+  getClubWithMembers,
   updateClubName,
   updateJoinCode,
-  updateVisibility,
   updateMaxMembers,
-  addClubWithMembers,
-  getClubWithMembers,
+  updateVisibility,
+  joinClubByCode,
+  clubRepository,
 };

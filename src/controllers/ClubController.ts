@@ -1,31 +1,35 @@
 import { Request, Response } from 'express';
+import { ClubVisibility } from '../entities/Club.js';
+import {
+  addClub,
+  getAllClubs,
+  getClubByClubName,
+  getClubByCreatedDate,
+  getClubByCreatedUser,
+  getClubById,
+  getClubByMaxMembers,
+  getClubByVisibility,
+  getClubWithMembers,
+  updateClubName,
+  updateJoinCode,
+  updateMaxMembers,
+  updateVisibility,
+  clubRepository,
+} from '../models/ClubModel.js';
 import {
   CreateClubSchema,
   UpdateClubNameSchema,
-  UpdateJoinCodeSchema,
   UpdateClubVisibilitySchema,
+  UpdateJoinCodeSchema,
   UpdateMaxMembersSchema,
 } from '../validators/ClubValidator.js';
-import { ClubVisibility } from '../entities/Club.js';
-import {
-  getAllClubs,
-  getClubById,
-  getClubByClubName,
-  getClubByCreatedUser,
-  getClubByVisibility,
-  getClubByMaxMembers,
-  getClubByCreatedDate,
-  addClub,
-  updateClubName,
-  updateJoinCode,
-  updateVisibility,
-  updateMaxMembers,
-  getClubWithMembers,
-} from '../models/ClubModel.js';
+import { clubMemberRepository } from '../models/ClubMemberModel.js';
+import { ClubMember } from '../entities/ClubMember.js';
+import { userRepository } from '../models/UserModel.js';
 
 async function getClubs(req: Request, res: Response): Promise<void> {
-  const clubMembers = await getAllClubs();
-  res.json({ clubMembers });
+  const clubs = await getAllClubs();
+  res.json({ clubs });
 }
 
 async function getClubByTheId(req: Request<{ clubId: string }>, res: Response): Promise<void> {
@@ -57,14 +61,14 @@ async function getClubByCreator(
   res: Response,
 ): Promise<void> {
   const { createdByUser } = req.params;
-  const club = await getClubByCreatedUser(createdByUser);
+  const clubs = await getClubByCreatedUser(createdByUser);
 
-  if (!club) {
-    res.status(404).json({ error: 'Club not found' });
+  if (!clubs || clubs.length === 0) {
+    res.status(404).json({ error: 'Clubs not found' });
     return;
   }
 
-  res.json({ club });
+  res.json({ clubs: [] });
 }
 
 async function getClubByTheVisibility(
@@ -75,7 +79,7 @@ async function getClubByTheVisibility(
   const club = await getClubByVisibility(visibility);
 
   if (!club) {
-    res.status(404).json({ error: 'Club not found' });
+    res.status(404).json({ error: 'Clubs not found' });
     return;
   }
 
@@ -90,7 +94,7 @@ async function getClubByTheMaxMembers(
   const club = await getClubByMaxMembers(maxMembers);
 
   if (!club) {
-    res.status(404).json({ error: 'Club not found' });
+    res.status(404).json({ error: 'Clubs not found' });
     return;
   }
 
@@ -105,7 +109,7 @@ async function getClubByTheCreatedDate(
   const club = await getClubByCreatedDate(createdAt);
 
   if (!club) {
-    res.status(404).json({ error: 'Club not found' });
+    res.status(404).json({ error: 'Clubs not found' });
     return;
   }
 
@@ -120,10 +124,10 @@ async function createClub(req: Request, res: Response): Promise<void> {
     return;
   }
 
-  const { clubId, clubName, joinCode, createdByUser, visibility, maxMembers } = result.data;
-  const newClub = await addClub(clubId, clubName, joinCode, createdByUser, visibility, maxMembers);
+  const { clubName, joinCode, userId, visibility, maxMembers } = result.data;
+  const newClub = await addClub(clubName, joinCode, userId, visibility, maxMembers);
   console.log(newClub);
-  res.status(201).json({ todo: newClub });
+  res.status(201).json({ newClub });
 }
 
 async function updatedClubName(req: Request<{ clubId: string }>, res: Response): Promise<void> {
@@ -255,18 +259,74 @@ async function getClubWithClubMembers(
   res.json({ club });
 }
 
+async function joinClub(req: Request, res: Response): Promise<void> {
+  const userId = req.session.authenticatedUser?.userId;
+  const { joinCode } = req.body;
+
+  if (!userId) {
+    res.sendStatus(401);
+    return;
+  }
+
+  if (!joinCode) {
+    res.status(400).json({ error: 'Join code is required' });
+    return;
+  }
+
+  try {
+    const club = await clubRepository.findOne({
+      where: { joinCode },
+      relations: ['clubMembers', 'clubMembers.user'],
+    });
+
+    if (!club) {
+      res.status(404).json({ error: 'Invalid join code' });
+      return;
+    }
+
+    const user = await userRepository.findOneBy({ userId });
+
+    const isAlreadyMember = club.clubMembers.some((member) => member.user.userId === userId);
+
+    if (isAlreadyMember) {
+      res.status(400).json({ error: 'Already a member of this club' });
+      return;
+    }
+
+    if (club.clubMembers.length >= club.maxMembers) {
+      res.status(400).json({ error: 'Club is full' });
+      return;
+    }
+
+    const membership = new ClubMember();
+    membership.user = user;
+    membership.club = club;
+
+    await clubMemberRepository.save(membership);
+
+    res.status(201).json({
+      message: 'Joined club successfully',
+      clubId: club.clubId,
+    });
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
+}
+
 export {
-  getClubs,
-  getClubByTheId,
-  getClubByTheName,
-  getClubByCreator,
-  getClubByTheVisibility,
-  getClubByTheMaxMembers,
-  getClubByTheCreatedDate,
   createClub,
-  updatedClubName,
-  updatedClubJoinCode,
-  updatedClubVisibility,
-  updatedClubMaxMembers,
+  getClubByCreator,
+  getClubByTheCreatedDate,
+  getClubByTheId,
+  getClubByTheMaxMembers,
+  getClubByTheName,
+  getClubByTheVisibility,
+  getClubs,
   getClubWithClubMembers,
+  updatedClubJoinCode,
+  updatedClubMaxMembers,
+  updatedClubName,
+  updatedClubVisibility,
+  joinClub,
 };

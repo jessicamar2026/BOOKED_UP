@@ -4,11 +4,13 @@ import {
   CreateDateColumn,
   Entity,
   PrimaryColumn,
-  ManyToMany,
-  Relation,
+  ManyToOne,
+  JoinColumn,
+  OneToMany,
 } from 'typeorm';
 import { v7 as uuidv7 } from 'uuid';
 import { ClubMember } from './ClubMember.js';
+import { User } from './User.js';
 
 export type ClubVisibility = 'private' | 'public' | 'invite only';
 
@@ -28,8 +30,12 @@ export class Club {
   @Column({ unique: true })
   joinCode: string;
 
+  @ManyToOne(() => User, (user) => user.clubs)
+  @JoinColumn({ name: 'createdByUserId' })
+  createdByUser: User;
+
   @Column()
-  createdByUser: string;
+  createdByUserId: string;
 
   @Column()
   visibility: ClubVisibility;
@@ -40,6 +46,8 @@ export class Club {
   @CreateDateColumn()
   createdAt: Date;
 
-  @ManyToMany(() => ClubMember, (clubMember) => clubMember.clubs)
-  clubMembers: Relation<ClubMember>[];
+  @OneToMany(() => ClubMember, (member) => member.club, {
+    cascade: true,
+  })
+  clubMembers: ClubMember[];
 }

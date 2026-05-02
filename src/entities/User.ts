@@ -1,5 +1,7 @@
-import { BeforeInsert, Column, CreateDateColumn, Entity, PrimaryColumn } from 'typeorm';
+import { BeforeInsert, Column, CreateDateColumn, Entity, PrimaryColumn, OneToMany } from 'typeorm';
 import { v7 as uuidv7 } from 'uuid';
+import { Club } from './Club.js';
+import { ClubMember } from './ClubMember.js';
 
 @Entity()
 export class User {
@@ -28,6 +30,12 @@ export class User {
 
   @Column({ default: 'user' })
   role: 'admin' | 'user';
+
+  @OneToMany(() => Club, (club) => club.createdByUser)
+  clubs: Club[];
+
+  @OneToMany(() => ClubMember, (member) => member.user)
+  memberships: ClubMember[];
 
   @CreateDateColumn()
   createdAt: Date;

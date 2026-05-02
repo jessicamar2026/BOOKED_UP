@@ -43,4 +43,5 @@ export {
   getClubMemberByRole,
   addClubMember,
   updateClubMemberRole,
+  clubMemberRepository,
 };

@@ -85,4 +85,5 @@ export {
   updateUserFirstName,
   updateUserLastName,
   updateUserPassword,
+  userRepository,
 };

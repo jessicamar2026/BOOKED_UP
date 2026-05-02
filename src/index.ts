@@ -63,8 +63,8 @@ app.use(express.static('public', { extensions: ['html'] }));
 
 // -- Routes --------------------------------------------------
 // users
-app.post('/users', registerUser);
-app.post('users/login', logIn);
+app.post('/api/register', registerUser);
+app.post('/api/login', logIn);
 app.delete('/sessions', logOut);
 app.post('/users', createUser);
 app.patch('/users/:userId/email', updatedUserEmail);
@@ -85,13 +85,13 @@ app.get('/clubs', getClubs);
 app.get('/clubs/:clubId', getClubByTheId);
 app.get('/club/:clubName', getClubByTheName);
 app.get('/club/:createdByUser', getClubByCreator);
-app.get('/club/:visbility', getClubByTheVisibility);
+app.get('/club/:visibility', getClubByTheVisibility);
 app.get('/club/:maxMembers', getClubByTheMaxMembers);
 app.get('/club/:createdAt', getClubByTheCreatedDate);
 app.post('/clubs', createClub);
 app.patch('/clubs/:clubId/club-name', updatedClubName);
 app.patch('/clubs/:clubId/join-code', updatedClubJoinCode);
-app.patch('/clubs/:clubId/visbility', updatedClubVisibility);
+app.patch('/clubs/:clubId/visibility', updatedClubVisibility);
 app.patch('/clubs/:clubId/max-members', updatedClubMaxMembers);
 
 app.listen(PORT, () => console.log(`Listening at http://localhost:${PORT}`));
