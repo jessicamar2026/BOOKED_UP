@@ -31,6 +31,7 @@ import {
   getClubByTheMaxMembers,
   getClubByTheCreatedDate,
   createClub,
+  joinClub,
   updatedClubName,
   updatedClubJoinCode,
   updatedClubVisibility,
@@ -89,6 +90,7 @@ app.get('/club/:visibility', getClubByTheVisibility);
 app.get('/club/:maxMembers', getClubByTheMaxMembers);
 app.get('/club/:createdAt', getClubByTheCreatedDate);
 app.post('/clubs', createClub);
+app.post('/clubs/join', joinClub);
 app.patch('/clubs/:clubId/club-name', updatedClubName);
 app.patch('/clubs/:clubId/join-code', updatedClubJoinCode);
 app.patch('/clubs/:clubId/visibility', updatedClubVisibility);
