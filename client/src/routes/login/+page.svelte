@@ -1,4 +1,8 @@
 <script lang="ts">
+  import { goto } from '$app/navigation';
+  import { post } from '$lib/api';
+  import { addToast } from '$lib/toast.svelte';
+
   let email = $state('');
   let password = $state('');
 
@@ -20,3 +24,5 @@
   <input type="email" bind:value={email} required/>
   <button type="submit">Submit</button>
 </form>
+
+<p>Not a member? <a href="/register">Create an acoount</a></p>

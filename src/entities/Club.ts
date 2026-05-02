@@ -30,17 +30,14 @@ export class Club {
   @Column({ unique: true })
   joinCode: string;
 
-  @ManyToOne(() => User, (user) => user.clubs)
+  @ManyToOne(() => User, (user) => user.clubs, { nullable: true })
   @JoinColumn({ name: 'createdByUserId' })
   createdByUser: User;
 
   @Column()
-  createdByUserId: string;
-
-  @Column()
   visibility: ClubVisibility;
 
-  @Column()
+  @Column({ default: 50 })
   maxMembers: number;
 
   @CreateDateColumn()

@@ -2,6 +2,7 @@ import { AppDataSource } from '../dataSource.js';
 import { Club, ClubVisibility } from '../entities/Club.js';
 import { ClubMember } from '../entities/ClubMember.js';
 import { clubMemberRepository } from '../models/ClubMemberModel.js';
+import { User } from '../entities/User.js';
 
 const clubRepository = AppDataSource.getRepository(Club);
 
@@ -18,7 +19,7 @@ async function getClubByClubName(clubName: string): Promise<Club | null> {
 }
 
 async function getClubByCreatedUser(createdByUserId: string): Promise<Club[]> {
-  return clubRepository.find({ where: { createdByUserId } });
+  return clubRepository.find({ where: { createdByUser: { userId: createdByUserId } } });
 }
 
 async function getClubByVisibility(visibility: ClubVisibility): Promise<Club[]> {
@@ -43,7 +44,7 @@ async function addClub(
   const newClub = new Club();
   newClub.clubName = clubName;
   newClub.joinCode = joinCode;
-  newClub.createdByUserId = createdByUserId;
+  newClub.createdByUser = { userId: createdByUserId } as User;
   newClub.visibility = visibility;
   newClub.maxMembers = maxMembers;
 
@@ -108,7 +109,7 @@ async function addClubWithMembers(
   const newClub = new Club();
   newClub.clubName = clubName;
   newClub.joinCode = joinCode;
-  newClub.createdByUserId = createdByUser;
+  newClub.createdByUser = { userId: createdByUser } as User;
   newClub.visibility = visibility;
   newClub.maxMembers = maxMembers;
   newClub.clubMembers = clubMembers;

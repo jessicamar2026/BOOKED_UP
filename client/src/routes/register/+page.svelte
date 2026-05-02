@@ -64,4 +64,4 @@
   </button>
 </form>
 
-<p>Already have an account? <a href="/login">Log in</a></p>
+<p>Already have an account? <a href="/login">Login</a></p>
