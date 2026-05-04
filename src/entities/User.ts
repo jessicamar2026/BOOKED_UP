@@ -1,4 +1,4 @@
-import { BeforeInsert, Column, CreateDateColumn, Entity, PrimaryColumn, OneToMany } from 'typeorm';
+import { BeforeInsert, Column, CreateDateColumn, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 import { v7 as uuidv7 } from 'uuid';
 import { Club } from './Club.js';
 import { ClubMember } from './ClubMember.js';
