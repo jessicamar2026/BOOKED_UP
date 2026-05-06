@@ -15,16 +15,18 @@
     submitting = true;
 
     const result = await post('api/register', {
-    firstName,
-    lastName,
-    displayName,
-    email,
-    password});
+      firstName,
+      lastName,
+      displayName,
+      email,
+      password,
+    });
 
     submitting = false;
 
     if (!result.ok) {
-      addToast('Registration failed.', 'error');
+      addToast('Registration failed. Try a different email.', 'error');
+      return;
     }
 
     addToast('Account created! Please log in.', 'success');

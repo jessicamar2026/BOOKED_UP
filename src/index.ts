@@ -21,6 +21,7 @@ import {
   updatedUserFirstName,
   updatedUserLastName,
   updatedUserPassword,
+  getMe,
 } from './controllers/UserController.js';
 import {
   getClubs,
@@ -72,6 +73,7 @@ app.patch('/api/users/:userId/email', updatedUserEmail);
 app.get('/api/users', getUsers);
 app.get('/api/user/:id', getUserByTheId);
 app.get('/api/user/:email', getUserByTheEmail);
+app.get('/api/me', getMe);
 app.patch('/api/user/:userId/password', updatedUserPassword);
 app.patch('/api/user/:userId/first-name', updatedUserFirstName);
 app.patch('/api/user/:userId/last-name', updatedUserLastName);

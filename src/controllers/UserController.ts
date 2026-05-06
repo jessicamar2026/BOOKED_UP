@@ -238,6 +238,16 @@ async function updatedUserLastName(req: Request<{ userId: string }>, res: Respon
   }
 }
 
+// src/controllers/UserController.ts
+function getMe(req: Request, res: Response): void {
+  if (!req.session.isLoggedIn) {
+    res.sendStatus(401);
+    return;
+  }
+
+  res.json(req.session.authenticatedUser);
+}
+
 export {
   createUser,
   getUserByTheEmail,
@@ -250,4 +260,5 @@ export {
   updatedUserFirstName,
   updatedUserLastName,
   updatedUserPassword,
+  getMe,
 };
