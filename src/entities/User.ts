@@ -23,7 +23,7 @@ export class User {
   email: string;
 
   @Column({ type: 'varchar' })
-  password: string;
+  passwordHash: string;
 
   @Column({ type: 'varchar' })
   displayName: string;
