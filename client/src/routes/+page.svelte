@@ -1,7 +1,8 @@
 <script lang="ts">
-  import { auth } from '$lib/auth.svelte';
-  import { toast } from '$lib/toast.svelte';
-</script>
+  import { api } from "$lib/api";
+  import { auth } from "$lib/auth.svelte";
+  import { toast } from "$lib/toast.svelte";
+  import { onMount } from "svelte";
 
 <h1>Welcome to Booked Up!</h1>
 

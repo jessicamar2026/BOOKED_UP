@@ -1,15 +1,18 @@
 import { Request, Response } from "express";
-import { addBook, getAllBooks, getBookById,updateBook,
-  deleteBook } from "../models/BookModel.js";
+import {
+  addBook,
+  deleteBook,
+  getAllBooks,
+  getBookById,
+  updateBook,
+} from "../models/BookModel.js";
 
-export async function getBooks(req: Request, res: Response): 
-Promise<void> {
+export async function getBooks(req: Request, res: Response): Promise<void> {
   const books = await getAllBooks();
   res.json({ books });
 }
 
-export async function getBook(req: Request, res: Response): 
-Promise<void> {
+export async function getBook(req: Request, res: Response): Promise<void> {
   const bookId = req.params.bookId as string;
 
   const book = await getBookById(bookId);
@@ -22,45 +25,47 @@ Promise<void> {
   res.json({ book });
 }
 
-export async function createBook(  req: Request,  res: Response): 
-Promise<void> {  
-  const {    title,    author,    pageCount  } = req.body;  
-  const newBook = await addBook(    title,    author,    pageCount  );  
-  
-  res.status(201).json({    book: newBook  });}
+export async function createBook(req: Request, res: Response): Promise<void> {
+  const { title, author, pageCount } = req.body;
+  const newBook = await addBook(title, author, pageCount);
 
-export async function updateBookController(req: Request,res: Response): 
-Promise<void> {
+  res.status(201).json({ book: newBook });
+}
 
+export async function updateBookController(
+  req: Request,
+  res: Response,
+): Promise<void> {
   const bookId = req.params.bookId as string;
 
-  const {title,author,pageCount} = req.body;
+  const { title, author, pageCount } = req.body;
 
-  const updatedBook = await updateBook(bookId,title,author,pageCount);
+  const updatedBook = await updateBook(bookId, title, author, pageCount);
 
   if (!updatedBook) {
     res.status(404).json({
-      error: "Book not found"
+      error: "Book not found",
     });
 
     return;
   }
 
   res.json({
-    book: updatedBook
+    book: updatedBook,
   });
 }
 
-export async function deleteBookController(req: Request,res: Response): 
-Promise<void> {
-
+export async function deleteBookController(
+  req: Request,
+  res: Response,
+): Promise<void> {
   const bookId = req.params.bookId as string;
 
   const deleted = await deleteBook(bookId);
 
   if (!deleted) {
     res.status(404).json({
-      error: "Book not found"
+      error: "Book not found",
     });
 
     return;

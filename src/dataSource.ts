@@ -1,31 +1,27 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
-
-const requiredEnvVars = ['DB_HOST', 'DB_PORT', 'DB_USERNAME', 'DB_NAME'] as const;
-
-for (const varName of requiredEnvVars) {
-  if (!process.env[varName]) {
-    throw new Error(
-      `${varName} is missing. Add it to your .env file.\n` +
-        'Required variables: DB_HOST, DB_PORT, DB_USERNAME, DB_PASSWORD, DB_NAME\n' +
-        'See the Environment_Variables-Setup file on canvas for setup instructions.',
-    );
-  }
-}
-
-const useSSL = process.env.DB_SSL_MODE === 'require';
+import { Book } from './entities/Book.js';
+import { Club } from './entities/Club.js';
+import { ClubMember } from './entities/ClubMember.js';
+import { Comment } from './entities/Comment.js';
+import { DiscussionPost } from './entities/DiscussionPost.js';
+import { ReadingProgress } from './entities/ReadingProgress.js';
+import { Review } from './entities/Review.js';
+import { User } from './entities/User.js';
 
 export const AppDataSource = new DataSource({
-  synchronize: true,
-  logging: false,
-  entities: ['dist/entities/*.js'],
   type: 'postgres',
   host: process.env.DB_HOST,
   port: Number(process.env.DB_PORT),
   username: process.env.DB_USERNAME,
-  password: process.env.DB_PASSWORD ?? '',
+  password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  ssl: useSSL ? { rejectUnauthorized: false } : false,
-});
 
-await AppDataSource.initialize();
+  synchronize: true,
+  logging: false,
+
+  entities: [User, Book, Club, ClubMember, DiscussionPost, Comment, Review, ReadingProgress],
+});

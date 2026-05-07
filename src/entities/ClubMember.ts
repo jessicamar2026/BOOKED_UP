@@ -15,7 +15,7 @@ export type ClubRole = 'admin' | 'non-admin';
 
 @Entity()
 export class ClubMember {
-  @PrimaryColumn()
+  @PrimaryColumn('uuid')
   clubMemberId: string;
 
   @BeforeInsert()
@@ -23,8 +23,8 @@ export class ClubMember {
     this.clubMemberId = uuidv7();
   }
 
-  @Column()
-  role: ClubRole;
+  @Column('varchar')
+  role: string;
 
   @CreateDateColumn()
   joinedAt: Date;
