@@ -1,14 +1,14 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
-  import { del } from '$lib/api';
-  import { setUser } from '$lib/auth.svelte';
-  import { addToast } from '$lib/toast.svelte';
+  import { api } from '$lib/api';
+  import { onMount } from 'svelte';
+  // import { setUser } from '$lib/auth.svelte';
+  import { toast } from '$lib/toast.svelte';
 
   onMount(async () => {
-    await del('/api/sessions');
-    setUser(null);
-    addToast('Logged out', 'info');
+    await api.del('/api/sessions');
+    // setUser(null);
+    toast.show('Logged out', 'info');
     goto('/home-page');
   });
 </script>

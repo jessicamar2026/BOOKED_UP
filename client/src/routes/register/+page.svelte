@@ -1,7 +1,7 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
-  import { post } from '$lib/api';
-  import { addToast } from '$lib/toast.svelte';
+  import { api } from '$lib/api';
+  import { toast } from '$lib/toast.svelte';
 
   let firstName = $state('');
   let lastName = $state('');
@@ -14,7 +14,7 @@
     event.preventDefault();
     submitting = true;
 
-    const result = await post('api/register', {
+    const result = await api.post('api/register', {
       firstName,
       lastName,
       displayName,
@@ -25,11 +25,11 @@
     submitting = false;
 
     if (!result.ok) {
-      addToast('Registration failed. Try a different email.', 'error');
+      toast.show('Registration failed. Try a different email.', 'error');
       return;
     }
 
-    addToast('Account created! Please log in.', 'success');
+    toast.show('Account created! Please log in.', 'success');
     goto('/login');
   }
 </script>

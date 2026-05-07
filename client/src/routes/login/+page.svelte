@@ -1,28 +1,30 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
-  import { post } from '$lib/api';
-  import { addToast } from '$lib/toast.svelte';
-  import { fetchUser } from '$lib/auth.svelte';
+  import { api } from '$lib/api';
+  import { toast } from '$lib/toast.svelte';
 
   let email = $state('');
   let password = $state('');
+  let submitting = $state(false);
 
   async function handleSubmit(event: Event): Promise<void> {
     event.preventDefault();
-    const result = await post('/api/home-page', { email, password });
+    submitting = true;
+    const result = await api.post('/api/home-page', { email, password });
 
     if (result.status === 403) {
-      addToast('Invalid email or password', 'error');
+      toast.show('Invalid email or password', 'error');
       return;
     }
 
     if (!result.ok) {
-      addToast('Something went wrong', 'error');
+      toast.show('Something went wrong', 'error');
       return;
     }
 
-    await fetchUser();
-    addToast('Success!', 'success');
+    // await fetchUser();
+    submitting = false;
+    toast.show('Success!', 'success');
     goto('/home-page');
   }
 </script>

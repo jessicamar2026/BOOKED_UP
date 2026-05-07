@@ -1,7 +1,7 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
-  import { post } from '$lib/api';
-  import { addToast } from '$lib/toast.svelte';
+  import { api } from '$lib/api';
+  import { toast } from '$lib/toast.svelte';
 
   let clubName = $state('');
   let accessibility = $state('');
@@ -14,7 +14,7 @@
     event.preventDefault();
     submitting = true;
 
-    const result = await post('api/clubs', {
+    const result = await api.post('api/clubs', {
       clubName,
       accessibility,
       joinCode,
@@ -24,11 +24,11 @@
     submitting = false;
 
     if (!result.ok) {
-      addToast('Book club could not be created.', 'error');
+      toast.show('Book club could not be created.', 'error');
       return;
     }
 
-    addToast('Book club created!', 'success');
+    toast.show('Book club created!', 'success');
     goto('/home-page');
   }
 </script>
@@ -49,9 +49,9 @@
     </select>
   </select>
 
-  {#if option === "c"}
+  {#if option === 'c'}
     <label>
-    Join Code
+      Join Code
       <input type="text" bind:value={joinCode} required />
     </label>
   {/if}

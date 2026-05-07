@@ -3,6 +3,21 @@ import express, { Express } from 'express';
 import session from 'express-session';
 import './config.js'; // do not remove this line
 import {
+  createClub,
+  getClubByCreator,
+  getClubByTheCreatedDate,
+  getClubByTheId,
+  getClubByTheMaxMembers,
+  getClubByTheName,
+  getClubByTheVisibility,
+  getClubs,
+  joinClub,
+  updatedClubJoinCode,
+  updatedClubMaxMembers,
+  updatedClubName,
+  updatedClubVisibility,
+} from './controllers/ClubController.js';
+import {
   createClubMember,
   getClubMemberByTheId,
   getClubMemberByTheRole,
@@ -11,6 +26,7 @@ import {
 } from './controllers/ClubMemberController.js';
 import {
   createUser,
+  getMe,
   getUserByTheEmail,
   getUserByTheId,
   getUsers,
@@ -21,23 +37,7 @@ import {
   updatedUserFirstName,
   updatedUserLastName,
   updatedUserPassword,
-  getMe,
 } from './controllers/UserController.js';
-import {
-  getClubs,
-  getClubByTheId,
-  getClubByTheName,
-  getClubByCreator,
-  getClubByTheVisibility,
-  getClubByTheMaxMembers,
-  getClubByTheCreatedDate,
-  createClub,
-  joinClub,
-  updatedClubName,
-  updatedClubJoinCode,
-  updatedClubVisibility,
-  updatedClubMaxMembers,
-} from './controllers/ClubController.js';
 import { sessionMiddleware } from './sessionConfig.js';
 
 const app: Express = express();
@@ -62,6 +62,7 @@ app.use(
 // This allows the client to access any file inside the `public` directory
 // Only put file that you actually want to be publicly accessibly in the `public` folder
 app.use(express.static('public', { extensions: ['html'] }));
+app.use(express.static('frontend/build'));
 
 // -- Routes --------------------------------------------------
 // users

@@ -1,4 +1,12 @@
-import { BeforeInsert, Column, CreateDateColumn, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
+import {
+  BeforeInsert,
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryColumn,
+  Relation,
+} from 'typeorm';
 import { v7 as uuidv7 } from 'uuid';
 import { Club } from './Club.js';
 import { User } from './User.js';
@@ -22,7 +30,7 @@ export class ClubMember {
   joinedAt: Date;
 
   @ManyToOne(() => Club, (club) => club.clubMembers)
-  club: Club;
+  club: Relation<Club>;
 
   @ManyToOne(() => User, (user) => user.memberships)
   user: User;

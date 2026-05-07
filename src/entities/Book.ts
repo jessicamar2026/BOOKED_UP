@@ -1,16 +1,10 @@
-import {
-  Entity,
-  PrimaryColumn,
-  Column,
-  BeforeInsert,
-  CreateDateColumn
-} from "typeorm";
+import { BeforeInsert, Column, CreateDateColumn, Entity, PrimaryColumn } from 'typeorm';
 
-import { v7 as uuidv7 } from "uuid";
+import { v7 as uuidv7 } from 'uuid';
 
 @Entity()
 export class Book {
-  @PrimaryColumn("uuid")
+  @PrimaryColumn('uuid')
   bookId: string;
 
   @BeforeInsert()
@@ -18,25 +12,25 @@ export class Book {
     this.bookId = uuidv7();
   }
 
-  @Column({ type: "text" })
+  @Column({ type: 'text' })
   title: string;
 
-  @Column({ type: "text" })
+  @Column({ type: 'text' })
   author: string;
 
-  @Column({ type: "int" })
+  @Column({ type: 'int' })
   pageCount: number;
 
-  @Column({ type: "text", nullable: true })
+  @Column({ type: 'text', nullable: true })
   genre: string;
 
-  @Column({ type: "text", nullable: true })
+  @Column({ type: 'text', nullable: true })
   coverImageURL: string;
 
-  @Column({ type: "int", nullable: true })
+  @Column({ type: 'int', nullable: true })
   publishedYear: number;
 
-  @Column({ type: "int", default: 0 })
+  @Column({ type: 'int', default: 0 })
   averageRating: number;
 
   @CreateDateColumn()
