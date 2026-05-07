@@ -3,10 +3,10 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  PrimaryColumn,
-  ManyToOne,
   JoinColumn,
+  ManyToOne,
   OneToMany,
+  PrimaryColumn,
 } from 'typeorm';
 import { v7 as uuidv7 } from 'uuid';
 import { ClubMember } from './ClubMember.js';
@@ -16,7 +16,7 @@ export type ClubVisibility = 'private' | 'public' | 'invite only';
 
 @Entity()
 export class Club {
-  @PrimaryColumn()
+  @PrimaryColumn('uuid')
   clubId: string;
 
   @BeforeInsert()
@@ -24,20 +24,24 @@ export class Club {
     this.clubId = uuidv7();
   }
 
-  @Column({ unique: true })
+  @Column({ type: 'varchar', unique: true })
   clubName: string;
 
-  @Column({ unique: true })
+  @Column({ type: 'varchar', unique: true })
   joinCode: string;
 
   @ManyToOne(() => User, (user) => user.clubs, { nullable: true })
   @JoinColumn({ name: 'createdByUserId' })
   createdByUser: User;
 
-  @Column()
+  @Column({
+    type: 'enum',
+    enum: ['private', 'public', 'invite only'],
+    default: 'private',
+  })
   visibility: ClubVisibility;
 
-  @Column({ default: 50 })
+  @Column({ type: 'int', default: 50 })
   maxMembers: number;
 
   @CreateDateColumn()

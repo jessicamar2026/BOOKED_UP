@@ -5,7 +5,7 @@ import { ClubMember } from './ClubMember.js';
 
 @Entity()
 export class User {
-  @PrimaryColumn()
+  @PrimaryColumn('uuid')
   userId: string;
 
   @BeforeInsert()
@@ -13,22 +13,26 @@ export class User {
     this.userId = uuidv7();
   }
 
-  @Column()
+  @Column({ type: 'varchar' })
   firstName: string;
 
-  @Column()
+  @Column({ type: 'varchar' })
   lastName: string;
 
-  @Column({ unique: true })
+  @Column({ type: 'varchar', unique: true })
   email: string;
 
-  @Column()
-  passwordHash: string;
+  @Column({ type: 'varchar' })
+  password: string;
 
-  @Column()
+  @Column({ type: 'varchar' })
   displayName: string;
 
-  @Column({ default: 'user' })
+  @Column({
+    type: 'enum',
+    enum: ['admin', 'user'],
+    default: 'user',
+  })
   role: 'admin' | 'user';
 
   @OneToMany(() => Club, (club) => club.createdByUser)
@@ -40,6 +44,6 @@ export class User {
   @CreateDateColumn()
   createdAt: Date;
 
-  @CreateDateColumn()
+  @Column({ type: 'timestamp', nullable: true })
   lastLoggedIn: Date;
 }
