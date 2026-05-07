@@ -5,6 +5,7 @@
 
   let clubName = $state('');
   let accessibility = $state('');
+  let option = $state('');
   let joinCode = $state('');
   let maxMembers = $state('');
   let submitting = $state(false);
@@ -41,15 +42,17 @@
 
   <select>
     Accessibility
-    <option value="a">public</option>
-    <option value="b">private</option>
-    <option value="c">invite only</option>
+    <select bind:value={option}>
+      <option value="a">public</option>
+      <option value="b">private</option>
+      <option value="c">invite only</option>
+    </select>
   </select>
 
-  {#if value === "c"}
+  {#if option === "c"}
     <label>
-      Join Code
-      <input type="joinCode" bind:value={joinCode} required />
+    Join Code
+      <input type="text" bind:value={joinCode} required />
     </label>
   {/if}
 
