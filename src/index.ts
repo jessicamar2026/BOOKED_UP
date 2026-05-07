@@ -92,7 +92,7 @@ app.get('/api/club/:createdByUser', getClubByCreator);
 app.get('/api/club/:visibility', getClubByTheVisibility);
 app.get('/api/club/:maxMembers', getClubByTheMaxMembers);
 app.get('/api/club/:createdAt', getClubByTheCreatedDate);
-app.post('/api/clubs', createClub);
+app.post('/api/clubs-create', createClub);
 app.post('/api/clubs/join', joinClub);
 app.patch('/api/clubs/:clubId/club-name', updatedClubName);
 app.patch('/api/clubs/:clubId/join-code', updatedClubJoinCode);

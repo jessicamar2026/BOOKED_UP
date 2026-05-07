@@ -14,7 +14,7 @@
     event.preventDefault();
     submitting = true;
 
-    const result = await api.post('clubs', {
+    const result = await api.post('/clubs-create', {
       clubName,
       accessibility,
       joinCode,

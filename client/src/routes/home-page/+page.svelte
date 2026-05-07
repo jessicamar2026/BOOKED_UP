@@ -13,8 +13,7 @@
 <header>
   <h1>📚 Booked Up</h1>
   <nav>
-    <a href="/login">Login</a>
-    <a href="/register">Sign up</a>
+    <a href="/logout">Log out</a>
   </nav>
 </header>
 
