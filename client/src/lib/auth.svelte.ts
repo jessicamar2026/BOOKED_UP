@@ -21,7 +21,7 @@ class AuthStore {
       this.loading = false;
     }
   }
-
+  
   setUser(user: User | null): void {
     this.user = user;
   }
