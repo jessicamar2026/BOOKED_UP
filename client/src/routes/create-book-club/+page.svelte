@@ -14,7 +14,7 @@
     event.preventDefault();
     submitting = true;
 
-    const result = await api.post('api/clubs', {
+    const result = await api.post('clubs', {
       clubName,
       accessibility,
       joinCode,

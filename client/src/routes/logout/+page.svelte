@@ -6,7 +6,7 @@
   import { toast } from '$lib/toast.svelte';
 
   onMount(async () => {
-    await api.del('/api/sessions');
+    await api.del('/sessions');
     // setUser(null);
     toast.show('Logged out', 'info');
     goto('/home-page');

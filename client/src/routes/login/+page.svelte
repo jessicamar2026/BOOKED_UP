@@ -10,7 +10,7 @@
   async function handleSubmit(event: Event): Promise<void> {
     event.preventDefault();
     submitting = true;
-    const result = await api.post('/api/home-page', { email, password });
+    const result = await api.post('/home-page', { email, password });
 
     if (result.status === 403) {
       toast.show('Invalid email or password', 'error');

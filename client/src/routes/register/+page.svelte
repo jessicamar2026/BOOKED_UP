@@ -14,7 +14,7 @@
     event.preventDefault();
     submitting = true;
 
-    const result = await api.post('api/register', {
+    const result = await api.post('/register', {
       firstName,
       lastName,
       displayName,
