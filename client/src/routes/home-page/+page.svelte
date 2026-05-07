@@ -32,6 +32,8 @@
   {/if}
 </main>
 
+<a href="/clubs">Create a club!</a>
+
 <style>
   header {
     display: flex;

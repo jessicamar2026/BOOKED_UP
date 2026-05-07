@@ -6,6 +6,8 @@ const isProduction = process.env.NODE_ENV === 'production';
 
 const PostgresStore = connectPgSimple(session);
 
+// Store sessions in PostgreSQL
+
 const pgPool = new Pool({
   host: process.env.DB_HOST,
   port: Number(process.env.DB_PORT),

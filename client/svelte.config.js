@@ -9,9 +9,9 @@ const config = {
       assets: '../frontend/build',
       fallback: 'index.html',
       precompress: false,
-      strict: true,
-    }),
-  },
+      strict: true
+    })
+  }
 };
 
 export default config;
